@@ -1,0 +1,495 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Brand palette ──────────────────────────────────────────────
+       Primary  Brand Purple   #5942A6   logo, headings, highlights, CTAs
+       Deep     Deep Purple   #3F2D80   footers, emphasis, gradient end
+       Light    Soft Lavender #B89AD6   subtle fills, secondary accents
+       Neutrals White #FFFFFF · Light Grey #EEF0F3 · Dark Grey #2F2F2F      */
+    --brand-purple: #5942A6;
+    --brand-deep: #3F2D80;
+    --brand-light: #B89AD6;
+    --brand-50: #f4eef9;
+    --brand-100: #e9dcf3;
+    --brand-gradient: linear-gradient(135deg, #5942A6 0%, #3F2D80 100%);
+    /* Premium accent gradient — deep purple → Brand purple → violet-magenta (no red). */
+    --brand-premium: linear-gradient(120deg, #3F2D80 0%, #5942A6 48%, #9D3BB0 100%);
+    --brand-text-gradient: linear-gradient(120deg, #5942A6 0%, #9D3BB0 100%);
+    --premium-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* App canvas + card surfaces. Cards are solid white on a light-grey canvas;
+       depth comes from crisp borders + soft shadows, not translucency. */
+    --glass-bg: #eef1f5;
+    --glass-surface-1: #ffffff;
+    --glass-surface-2: #ffffff;
+    --glass-surface-3: #ffffff;
+    --glass-border: rgba(26, 23, 43, 0.08);
+    --glass-border-hover: rgba(106, 44, 145, 0.28);
+    --glass-highlight: rgba(255, 255, 255, 0);
+
+    --text-primary: #23262e;
+    --text-secondary: #565b67;
+    --text-muted: #8a90a0;
+    --text-heading: #3a1d5d;
+
+    /* Brand accent palette (purple-forward, muted for an institutional feel) */
+    --accent-purple: #5942A6;
+    --accent-gold: #b7791f;
+    --accent-blue: #2b5ba8;
+    --accent-teal: #0f766e;
+    --accent-rose: #a63b7e;
+    --accent-amber: #b7791f;
+    --accent-indigo: #3F2D80;
+    --accent-emerald: #2f855a;
+
+    /* Section identity colors (kept for functional differentiation, retoned) */
+    --section-spark: #b7791f;
+    --section-founders: #2b5ba8;
+    --section-catalyst: #5942A6;
+    --section-velocity: #0f766e;
+    --section-events: #7853A8;
+    --section-msme: #3F2D80;
+    --section-outreach: #2f855a;
+    --section-finance: #b7791f;
+
+    --success: #2f855a;
+    --warning: #b7791f;
+    --danger: #c0392b;
+    --blur-sm: blur(8px);
+    --blur-md: blur(16px);
+    --blur-xl: blur(32px);
+    --blur-2xl: blur(48px);
+  }
+
+  body {
+    font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    background-color: var(--glass-bg);
+    /* One faint lavender wash top-right — a touch of brand, no rainbow clutter. */
+    background-image:
+      radial-gradient(ellipse 1000px 520px at 100% 0%, rgba(184, 154, 214, 0.10) 0%, transparent 62%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.022em;
+    font-weight: 800;
+  }
+
+  /* Brand-consistent keyboard focus ring. Replaces the browser's default (gold/auto)
+     outline everywhere with Brand purple — applied only for keyboard users via
+     :focus-visible, so mouse clicks don't show a ring. */
+  :focus-visible {
+    outline: 2px solid var(--brand-purple);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Inputs that already supply their own purple focus ring shouldn't get a second box. */
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: none;
+  }
+
+  /* Premium numeric figures — tabular, tight, for KPI values. */
+  .num-figure {
+    font-feature-settings: "tnum" 1, "cv01" 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  /* ── Solid card surfaces (replaces the old glassmorphism) ── */
+  .glass-1 {
+    position: relative;
+    background: var(--glass-surface-1);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 10px -6px rgba(16, 24, 40, 0.06);
+  }
+
+  .glass-2 {
+    position: relative;
+    background: var(--glass-surface-2);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 1px 2px rgba(16, 24, 40, 0.04),
+      0 8px 20px -8px rgba(16, 24, 40, 0.10),
+      0 18px 40px -20px rgba(74, 31, 111, 0.10);
+  }
+
+  .glass-3 {
+    position: relative;
+    background: var(--glass-surface-3);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 2px 4px rgba(16, 24, 40, 0.05),
+      0 14px 32px -12px rgba(16, 24, 40, 0.14),
+      0 28px 56px -28px rgba(74, 31, 111, 0.14);
+  }
+
+  .glass-hover {
+    transition: transform 0.3s var(--premium-ease), box-shadow 0.3s var(--premium-ease), border-color 0.3s var(--premium-ease);
+  }
+  .glass-hover:hover {
+    will-change: transform, box-shadow;
+  }
+
+  .glass-hover:hover {
+    transform: translateY(-3px);
+    /* Bright, wide Brand PURPLE hover glow (overrides the per-accent hover tints). */
+    border-color: rgba(106, 44, 145, 0.95) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 0 0 3px rgba(106, 44, 145, 0.40),
+      0 0 26px rgba(106, 44, 145, 0.38),
+      0 16px 34px -10px rgba(74, 31, 111, 0.32),
+      0 6px 14px -6px rgba(16, 24, 40, 0.10) !important;
+  }
+
+  .glass-hover:active {
+    transform: translateY(-1px);
+    transition-duration: 120ms;
+  }
+
+  .glow-border {
+    border-color: rgba(106, 44, 145, 0.30);
+    box-shadow: 0 0 0 1px rgba(106, 44, 145, 0.10), 0 4px 14px rgba(74, 31, 111, 0.10);
+  }
+
+  /* Brand gradient (headers, primary CTAs) */
+  .bg-brand-gradient {
+    background-image: var(--brand-gradient);
+  }
+
+  /* Premium accent gradient (purple → violet-magenta, no red) for emphasis surfaces. */
+  .bg-brand-premium {
+    background-image: var(--brand-premium);
+  }
+
+  /* Gradient text for highlighted values / hero words. */
+  .text-gradient-brand {
+    background-image: var(--brand-text-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* 1px gradient border on a solid card (padding-box/border-box trick). */
+  .border-gradient-brand {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      var(--brand-premium) border-box;
+  }
+
+  /* Premium gradient CTA button. */
+  .btn-brand {
+    background-image: var(--brand-premium);
+    color: #ffffff;
+    box-shadow: 0 6px 18px -6px rgba(106, 44, 145, 0.5);
+    transition: transform 0.28s var(--premium-ease), box-shadow 0.28s var(--premium-ease), filter 0.28s var(--premium-ease);
+  }
+  .btn-brand:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -6px rgba(106, 44, 145, 0.55);
+    filter: saturate(1.06) brightness(1.03);
+  }
+  .btn-brand:active {
+    transform: translateY(0);
+  }
+
+  /* Accent-tinted card variants — a restrained colored border on hover only. */
+  .glass-accent-amber:hover { border-color: rgba(183, 121, 31, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(183, 121, 31, 0.12); }
+  .glass-accent-blue:hover { border-color: rgba(43, 91, 168, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(43, 91, 168, 0.12); }
+  .glass-accent-purple:hover { border-color: rgba(106, 44, 145, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(106, 44, 145, 0.12); }
+  .glass-accent-teal:hover { border-color: rgba(15, 118, 110, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(15, 118, 110, 0.12); }
+  .glass-accent-rose:hover { border-color: rgba(166, 59, 126, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(166, 59, 126, 0.12); }
+  .glass-accent-emerald:hover { border-color: rgba(47, 133, 90, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(47, 133, 90, 0.12); }
+  .glass-accent-indigo:hover { border-color: rgba(75, 31, 111, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(75, 31, 111, 0.12); }
+  .glass-accent-gold:hover { border-color: rgba(183, 121, 31, 0.30); box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(183, 121, 31, 0.12); }
+
+  /* Animations */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .animate-shake { animation: shake 0.4s ease-in-out; }
+
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes modalZoomIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes staggerFadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-stagger {
+    animation: staggerFadeUp 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* ── Data tables — zebra rows, sticky header, calm full-row hover. ── */
+  .tbl-stripe tbody tr:nth-child(even) { background: rgba(244, 238, 249, 0.55); }
+  .tbl-row { transition: background-color 0.15s ease; }
+  .tbl-row:hover { background: rgba(106, 44, 145, 0.06); }
+  .tbl-head-sticky th { position: sticky; top: 0; z-index: 5; background: #ffffff; }
+
+  /* Decorative ambient keyframes — retained so existing class refs never break,
+     but the corporate theme keeps motion calm (kept gentle / barely-there). */
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(4px, -4px) scale(1.02); }
+  }
+  .animate-float { animation: floatOrb 10s ease-in-out infinite; }
+
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.65; }
+  }
+  .animate-pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar { width: 3px; }
+  .thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.08); border-radius: 10px; }
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.15); }
+
+  /* ── Spotlight card effect (cursor-following radial glow) ── */
+  .spotlight-card {
+    --spotlight-x: 50%;
+    --spotlight-y: 50%;
+    --spotlight-opacity: 0;
+    position: relative;
+  }
+
+  .spotlight-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle 180px at var(--spotlight-x) var(--spotlight-y),
+      rgba(106, 44, 145, var(--spotlight-opacity)) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 2;
+    opacity: var(--spotlight-opacity);
+    transition: opacity 0.2s ease;
+  }
+
+  .spotlight-card.tilt-active::after {
+    opacity: var(--spotlight-opacity);
+  }
+
+  /* ── Tilt active state ── */
+  .tilt-active {
+    z-index: 10;
+  }
+
+  .tilt-active::after {
+    opacity: var(--spotlight-opacity) !important;
+  }
+
+  /* ── Scroll reveal animation ── */
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reveal-hidden {
+    opacity: 0;
+  }
+
+  .reveal-visible {
+    animation: revealUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+
+  /* ── Button micro-interactions ── */
+  @keyframes ripple {
+    0% { transform: scale(0); opacity: 0.6; }
+    100% { transform: scale(4); opacity: 0; }
+  }
+
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+  }
+
+  .btn-ripple:active::after {
+    animation: ripple 0.5s ease-out;
+  }
+
+  /* ── Chart tooltip animation ── */
+  .recharts-tooltip-wrapper {
+    animation: modalZoomIn 0.2s ease-out;
+  }
+
+  .recharts-wrapper .recharts-surface {
+    overflow: visible;
+  }
+
+  /* ── Icon hover bounce ── */
+  .icon-bounce {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .icon-bounce:hover {
+    transform: scale(1.12);
+  }
+
+  /* Print helpers (default state; overridden in @media print below). */
+  .print-only { display: none; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Print / "Save as PDF" (Ctrl+P). Makes the dashboard a clean, branded report:
+ * drops the nav chrome, lets all content flow across pages (the app is normally
+ * a fixed-height, single-screen scroll area), keeps cards whole, unclips wide
+ * tables/charts, prints brand colours faithfully, and saves ink on backgrounds.
+ * ────────────────────────────────────────────────────────────────────────── */
+/* One-page report: keep the wide multi-column layout, then scale the WHOLE report
+   down so it lands on a single A4 page. Portrait wastes far less width than
+   landscape for this tall content. The zoom is tuned to the measured height —
+   if anything ever spills to a 2nd page, lower it a touch; raise it for less margin. */
+@page {
+  size: 210mm 297mm; /* A4 portrait, explicit dims lock the orientation */
+  margin: 7mm;
+}
+
+@media print {
+  /* Print brand colours, chart fills and accent chips faithfully. */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+  }
+
+  /* Drop interactive chrome — side nav, top bar, and anything opted out. */
+  aside, header, .no-print { display: none !important; }
+  .print-only { display: block !important; }
+
+  /* Unlock the fixed single-screen shell so the whole dashboard flows onto pages. */
+  .app-shell {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .app-main {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    scroll-behavior: auto !important;
+  }
+  /* Keep the wide multi-column layout, then scale the entire report onto one page. */
+  .app-main > div {
+    width: 1100px !important;
+    max-width: 1100px !important;
+    margin: 0 !important;
+    zoom: 0.66;
+  }
+
+  /* Responsive breakpoints are viewport-based and the print viewport is narrow, so
+     the desktop grids (lg:grid-cols-7 etc.) never fire and collapse to 1–2 columns.
+     Re-impose the full multi-column desktop layout explicitly (order matters: a later
+     rule wins for elements that carry both md: and lg: column classes). */
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .lg\:grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)) !important; }
+
+  /* CRITICAL: scroll-reveal + stagger sections sit at opacity:0 until viewed on
+     screen, so on paper they print BLANK. Force every animated block fully
+     visible and static so ALL the data actually prints. */
+  .reveal-hidden, .reveal-visible, .animate-stagger, [class*="animate-"] {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Don't clip wide tables / the Sankey — let them print in full. */
+  .overflow-x-auto { overflow: visible !important; }
+  .thin-scrollbar { overflow: visible !important; }
+
+  /* Flatten cards for paper: hairline border, no shadow, never split a card. */
+  .glass-1, .glass-2, .glass-3 {
+    box-shadow: none !important;
+    border: 1px solid #e3e6ec !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep charts, images and their cards intact on a single page. */
+  .recharts-wrapper, .recharts-responsive-container, svg, img {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Calm interactions + keep headings with their content. */
+  .glass-hover { transform: none !important; }
+  h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+  a { text-decoration: none !important; color: inherit !important; }
+}

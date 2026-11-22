@@ -1,0 +1,90 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        glass: {
+          surface1: 'rgba(255,255,255,0.05)',
+          surface2: 'rgba(255,255,255,0.08)',
+          surface3: 'rgba(255,255,255,0.12)',
+          border: 'rgba(255,255,255,0.08)',
+        },
+        // Brand brand — primary identity colour and its scale.
+        brand: {
+          DEFAULT: '#5942A6',
+          deep: '#3F2D80',
+          light: '#B89AD6',
+          50: '#F4EEF9',
+          100: '#E9DCF3',
+          200: '#D6BEE8',
+          300: '#B89AD6',
+          400: '#9466B8',
+          500: '#5942A6',
+          600: '#5C2680',
+          700: '#3F2D80',
+          800: '#3A1857',
+          900: '#2A1140',
+        },
+        accent: {
+          purple: '#5942A6',
+          'purple-light': '#B89AD6',
+          gold: '#b7791f',
+          'gold-light': '#d4a024',
+          blue: '#2b5ba8',
+          teal: '#0f766e',
+          rose: '#a63b7e',
+          amber: '#b7791f',
+          indigo: '#3F2D80',
+          emerald: '#2f855a',
+        },
+      },
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'SF Mono', 'monospace'],
+      },
+      backdropBlur: {
+        xs: '4px',
+        sm: '8px',
+        md: '16px',
+        xl: '32px',
+        '2xl': '48px',
+      },
+      boxShadow: {
+        'glass-sm': 'inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.12)',
+        'glass-md': 'inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 24px rgba(0,0,0,0.16)',
+        'glass-lg': 'inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 32px rgba(0,0,0,0.2)',
+        'glass-xl': 'inset 0 1px 0 rgba(255,255,255,0.15), 0 16px 48px rgba(0,0,0,0.3)',
+      },
+      borderRadius: {
+        '2xl': '16px',
+        '3xl': '24px',
+        '4xl': '32px',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease',
+        'slide-up': 'slideUp 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+        'stagger': 'staggerFadeUp 0.4s cubic-bezier(0.23, 1, 0.32, 1) both',
+        'shimmer': 'shimmer 1.5s infinite',
+        'float': 'floatOrb 8s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+        'gradient': 'gradientShift 6s ease infinite',
+      },
+      keyframes: {
+        fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+        slideUp: { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        staggerFadeUp: { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+        floatOrb: { '0%, 100%': { transform: 'translate(0, 0) scale(1)' }, '33%': { transform: 'translate(10px, -8px) scale(1.05)' }, '66%': { transform: 'translate(-6px, 6px) scale(0.98)' } },
+        pulseGlow: { '0%, 100%': { opacity: '0.4' }, '50%': { opacity: '0.7' } },
+        gradientShift: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+      },
+    },
+  },
+  plugins: [],
+}
