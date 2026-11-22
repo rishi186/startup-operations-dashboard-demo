@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react'
-import { collegeOutreach, finance, ideaLab, incubationEvents, msmeEvents, partners, pipeline, portfolio } from '../data/synthetic'
+import { collegeOutreach, finance, ideaLab, incubationEvents, partners, pipeline, portfolio } from '../data/synthetic'
+import { useDemoEvents } from '../data/demoEvents'
+import { summarizeEnterpriseEvents } from '../utils/enterpriseEvents'
 import GlassCard from '../components/ui/GlassCard'
 import StatCard from '../components/ui/StatCard'
 import SectionHeader from '../components/ui/SectionHeader'
@@ -24,7 +26,8 @@ const PROGRAM_ICONS = {
 export default function Overview() {
   const { programsList, infrastructure, digitalInfra, forwardPlan, notices, workspace } = portfolio
   const eventBuckets = Object.values(incubationEvents)
-  const msmeAttendance = msmeEvents.reduce((total, event) => total + (event.participantsActual ?? 0), 0)
+  const events = useDemoEvents()
+  const { totalActual: msmeAttendance } = summarizeEnterpriseEvents(events)
   const incubationAttendance = eventBuckets.reduce((total, event) => total + event.total, 0)
   const funding = finance.grants.reduce((total, grant) => total + grant.amount, 0)
   const occupancy = Math.round(workspace.occupied / workspace.capacity * 100)
@@ -33,7 +36,7 @@ export default function Overview() {
     { label: 'Startup Applicants', value: ideaLab.summary.applications, icon: Rocket, accent: 'purple' },
     { label: 'Total Participations', value: ideaLab.summary.attendance + incubationAttendance + msmeAttendance + collegeOutreach.stats.students, icon: Users, accent: 'blue' },
     { label: 'MSME Attendance', value: msmeAttendance, icon: Briefcase, accent: 'indigo' },
-    { label: 'Events Tracked', value: eventBuckets.length + msmeEvents.length, icon: Calendar, accent: 'rose' },
+    { label: 'Events Tracked', value: eventBuckets.length + events.length, icon: Calendar, accent: 'rose' },
     { label: 'Grant Funding', value: (funding / 100000).toFixed(2) + 'L', icon: IndianRupee, accent: 'gold' },
     { label: 'Occupancy', value: occupancy + '%', sub: workspace.occupied + ' of ' + workspace.capacity + ' desks', icon: Building, accent: 'teal' },
     { label: 'Campus Partners', value: collegeOutreach.stats.colleges, icon: MapPin, accent: 'emerald' },

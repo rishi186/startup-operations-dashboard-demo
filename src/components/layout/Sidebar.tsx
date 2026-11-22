@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, Landmark,
-  FlaskConical, Briefcase, BarChart3, X
+  FlaskConical, Briefcase, BarChart3, Settings2, X
 } from 'lucide-react'
 
 const activeRings = {
@@ -17,6 +17,7 @@ const navItems = [
   { to: '/msme', icon: Briefcase, label: 'MSME', color: 'text-brand', accent: 'purple' },
   { to: '/college-outreach', icon: Building2, label: 'College Outreach', color: 'text-emerald-600', accent: 'emerald' },
   { to: '/finance', icon: Landmark, label: 'Finance', color: 'text-amber-600', accent: 'gold' },
+  { to: '/admin', icon: Settings2, label: 'Demo Admin', color: 'text-brand', accent: 'purple' },
 ] as const
 
 interface Props {

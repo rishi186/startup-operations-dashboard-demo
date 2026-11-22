@@ -1,4 +1,5 @@
-import { msmeEvents as events } from "../data/synthetic"
+import { useDemoEvents } from "../data/demoEvents"
+import { quoteEventCsvCell, summarizeEnterpriseEvents } from "../utils/enterpriseEvents"
 import { useMemo, useState, Fragment, useEffect, useCallback, useRef } from "react"
 import GlassCard from "../components/ui/GlassCard"
 import StatCard from "../components/ui/StatCard"
@@ -20,9 +21,6 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue
 }
 
-const YEAR_OPTIONS = ["25-26", "26-27", "All"] as const
-type YearFilter = (typeof YEAR_OPTIONS)[number]
-
 const EVENT_COLORS: Record<string, string> = {
   "Business Registration": "#d97706",
   "Skills Development": "#2563eb",
@@ -37,15 +35,7 @@ const TYPE_BADGES: Record<string, { short: string; color: string }> = {
   "Vendor Development": { short: "VEN", color: "bg-brand-50 text-brand" },
 }
 
-function computeStats(events: EnterpriseEvent[]) {
-  const totalEvents = events.length
-  const totalReg = events.reduce((s, e) => s + (e.participantsRegistered || 0), 0)
-  const totalActual = events.reduce((s, e) => s + (e.participantsActual || 0), 0)
-  const districts = new Set(events.map((e) => e.district).filter(Boolean)).size
-  return { totalEvents, totalReg, totalActual, districts }
-}
-
-function computeEventsByType(events: EnterpriseEvent[]) {
+function computeEventsByType(events: readonly EnterpriseEvent[]) {
   const map: Record<string, number> = {}
   events.forEach((e) => {
     map[e.eventType] = (map[e.eventType] || 0) + 1
@@ -53,7 +43,7 @@ function computeEventsByType(events: EnterpriseEvent[]) {
   return Object.entries(map).map(([name, value]) => ({ name, value, color: EVENT_COLORS[name] || "#94a3b8" }))
 }
 
-function computeParticipantsByDistrict(events: EnterpriseEvent[]) {
+function computeParticipantsByDistrict(events: readonly EnterpriseEvent[]) {
   const map: Record<string, { registered: number; actual: number }> = {}
   events.forEach((e) => {
     const d = e.district || "Unknown"
@@ -76,7 +66,11 @@ function computeParticipantsByDistrict(events: EnterpriseEvent[]) {
 }
 
 export default function MSME() {
-  const [yearFilter, setYearFilter] = useState<YearFilter>("All")
+  const events = useDemoEvents()
+  const [selectedYear, setYearFilter] = useState("All")
+  const fiscalYears: string[] = [...new Set(events.map(({ fiscalYear }) => fiscalYear))].sort()
+  const yearOptions = [...fiscalYears, "All"]
+  const yearFilter = yearOptions.includes(selectedYear) ? selectedYear : "All"
   const [search, setSearch] = useState("")
   const [typeFilter, setTypeFilter] = useState("")
   const [districtFilter, setDistrictFilter] = useState("")
@@ -132,8 +126,7 @@ export default function MSME() {
       e.status,
       e.fiscalYear
     ])
-    const quote = (cell: string | number) => '"' + String(cell).replace(/"/g, '""') + '"'
-    const csv = [headers.join(','), ...rows.map((row) => row.map(quote).join(','))].join('\r\n')
+    const csv = [headers.join(','), ...rows.map((row) => row.map(quoteEventCsvCell).join(','))].join('\r\n')
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -143,7 +136,7 @@ export default function MSME() {
     URL.revokeObjectURL(url)
   }, [filteredEvents])
 
-  const stats = useMemo(() => computeStats(filteredEvents), [filteredEvents])
+  const stats = useMemo(() => summarizeEnterpriseEvents(filteredEvents), [filteredEvents])
   const eventsByType = useMemo(() => computeEventsByType(filteredEvents), [filteredEvents])
   const participantsByDistrict = useMemo(() => computeParticipantsByDistrict(filteredEvents), [filteredEvents])
   const typeDistribution = useMemo(() => {
@@ -174,17 +167,18 @@ export default function MSME() {
       {/* Year filter pills */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs text-[var(--text-muted)] font-medium mr-1">Period:</span>
-        {YEAR_OPTIONS.map((y) => (
+        {yearOptions.map((y) => (
           <button
             key={y}
             onClick={() => setYearFilter(y)}
+            aria-pressed={yearFilter === y}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95 ${
               yearFilter === y
                 ? "bg-brand-gradient text-white shadow-md shadow-brand/20"
                 : "glass-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:glass-3"
             }`}
           >
-            {y === "All" ? "Both Years" : `FY ${y}`}
+            {y === "All" ? "All Years" : `FY ${y}`}
           </button>
         ))}
       </div>

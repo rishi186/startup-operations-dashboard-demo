@@ -17,6 +17,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/msme/vendors': 'Vendor Development',
   '/college-outreach': 'College Outreach',
   '/finance': 'Finance',
+  '/admin': 'Demo Admin',
 }
 
 interface Props {

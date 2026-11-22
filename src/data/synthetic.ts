@@ -5,7 +5,7 @@ import type {
 
 // All rows and values in this module were created for the portfolio demo.
 export const partners = ['Example Horizon Works', 'Example Cedar Ventures', 'Example Northstar Labs']
-const districts = ['Cedar Vale', 'Juniper Coast', 'Maple Ridge', 'Fern Crossing']
+export const demoDistricts = ['Cedar Vale', 'Juniper Coast', 'Maple Ridge', 'Fern Crossing']
 const sectors = ['Clean Technology', 'Education', 'Healthcare', 'Agriculture', 'Manufacturing', 'Business Services']
 const genders = ['Female', 'Male', 'Female', 'Male', 'Others']
 const occupations = ['Student', 'Founder', 'Employee', 'Student']
@@ -30,7 +30,7 @@ const applicants: Participant[] = Array.from({ length: 48 }, (_, index) => ({
   startup: 'Example ' + ventureNames[index % ventureNames.length] + ' ' + ventureSuffixes[Math.floor(index / ventureNames.length)],
   gender: genders[index % genders.length],
   sector: sectors[index % sectors.length],
-  location: districts[index % districts.length],
+  location: demoDistricts[index % demoDistricts.length],
   stage: index < 8 ? (index % 3 === 0 ? 'MVP' : 'Prototype') : 'Ideation',
   occupation: occupations[index % occupations.length],
   cohort: 'Cohort ' + (index % 3 + 1),
@@ -78,14 +78,14 @@ const collegeNames = [
 ]
 const colleges = collegeNames.map((college, index) => ({
   college,
-  district: districts[index % districts.length],
+  district: demoDistricts[index % demoDistricts.length],
   students: 18 + (index * 11) % 37,
   ambassador: applicants[index + 24].name,
 }))
 
 export const collegeOutreach = {
   colleges,
-  districts: districts.map((name) => ({
+  districts: demoDistricts.map((name) => ({
     name,
     value: colleges.filter((college) => college.district === name).reduce((total, college) => total + college.students, 0),
   })),
@@ -114,7 +114,7 @@ function eventBucket(name: string, total: number, offset: number): IncubationEve
     occupation: count(occupations),
     stage: count(['Ideation', 'Prototype', 'Ideation', 'MVP', 'Validation', 'Operational']),
     sector_clean: count(sectors),
-    location: count(districts),
+    location: count(demoDistricts),
   }
 }
 
@@ -125,7 +125,7 @@ export const incubationEvents: IncubationEventsData = {
   mentors: eventBucket('Mentor Office Hours', 28, 7),
 }
 
-const enterpriseCategories = [
+export const enterpriseCategories = [
   { path: 'registration', title: 'Business Registration', description: 'Registration clinics and business formalization', short: 'REG' },
   { path: 'skills', title: 'Skills Development', description: 'Training for early-stage entrepreneurs', short: 'SKL' },
   { path: 'ip', title: 'Intellectual Property', description: 'Awareness sessions and filing support', short: 'IP' },
@@ -138,18 +138,18 @@ const venues = ['Example Cedar Commons', 'Example Juniper Studio', 'Example Mapl
 export const msmeEvents: EnterpriseEvent[] = enterpriseCategories.flatMap((program, categoryIndex) =>
   eventDates.map((date, index) => {
     const number = String(index + 1).padStart(2, '0')
-    const districtIndex = (categoryIndex + index) % districts.length
+    const districtIndex = (categoryIndex + index) % demoDistricts.length
     const participantsRegistered = 24 + (categoryIndex * 7 + index * 11) % 29
     const completed = index < 3 || categoryIndex % 2 === 0
     return {
       id: 'demo-' + program.short.toLowerCase() + '-' + number,
       fiscalYear: index < 2 ? '25-26' : '26-27',
       eventType: program.title,
-      eventName: program.title + ' · ' + districts[districtIndex],
+      eventName: program.title + ' · ' + demoDistricts[districtIndex],
       date,
       venue: venues[districtIndex],
       eventCode: 'DEMO-' + program.short + '-' + number,
-      district: districts[districtIndex],
+      district: demoDistricts[districtIndex],
       participantsRegistered,
       participantsActual: completed ? participantsRegistered - 4 - index : null,
       status: completed ? 'Completed' : 'In Progress',
@@ -187,27 +187,29 @@ export function combineSummaries(summaries: RegistrantSummary[]): RegistrantSumm
   return combined
 }
 
-export const enterprisePrograms = enterpriseCategories.map((program, categoryIndex) => {
-  const data: EnterpriseProgramData = {
-    batches: msmeEvents.filter((event) => event.eventType === program.title).map((event, index) => ({
-      id: event.eventCode,
-      component: program.title,
-      implementationPartner: partners[(categoryIndex + index) % partners.length],
-      district: event.district,
-      constituency: event.district + ' ' + (index % 2 === 0 ? 'Central' : 'West'),
-      mandal: (index % 2 === 0 ? 'Brookside' : 'Willowbank') + ' Ward',
-      startDate: event.date,
-      endDate: event.date,
-      checklistSubmissionDate: event.status === 'Completed' ? event.date : '',
-      checklistStatus: event.status === 'Completed' ? 'Received' : 'Pending',
-      status: event.status,
-      reviewStatus: event.status === 'Completed' ? 'Reviewed' : 'In review',
-      remarks: event.status === 'Completed' ? 'Workshop and follow-up completed' : 'Follow-up in progress',
-      summary: summarizeRegistrants(event.participantsRegistered, index + categoryIndex),
-    })),
-  }
-  return { ...program, data }
-})
+export function buildEnterprisePrograms(events: readonly EnterpriseEvent[]) {
+  return enterpriseCategories.map((program, categoryIndex) => {
+    const data: EnterpriseProgramData = {
+      batches: events.filter((event) => event.eventType === program.title).map((event, index) => ({
+        id: event.eventCode,
+        component: program.title,
+        implementationPartner: partners[(categoryIndex + index) % partners.length],
+        district: event.district,
+        constituency: event.district + ' ' + (index % 2 === 0 ? 'Central' : 'West'),
+        mandal: (index % 2 === 0 ? 'Brookside' : 'Willowbank') + ' Ward',
+        startDate: event.date,
+        endDate: event.date,
+        checklistSubmissionDate: event.status === 'Completed' ? event.date : '',
+        checklistStatus: event.status === 'Completed' ? 'Received' : 'Pending',
+        status: event.status,
+        reviewStatus: event.status === 'Completed' ? 'Reviewed' : 'In review',
+        remarks: event.status === 'Completed' ? 'Workshop and follow-up completed' : 'Follow-up in progress',
+        summary: summarizeRegistrants(event.participantsRegistered, index + categoryIndex),
+      })),
+    }
+    return { ...program, data }
+  })
+}
 
 export const finance: FinanceData = {
   grants: [
